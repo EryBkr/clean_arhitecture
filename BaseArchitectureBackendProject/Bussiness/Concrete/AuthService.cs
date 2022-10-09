@@ -34,15 +34,23 @@ namespace Bussiness.Concrete
             return "Giriş Başarısız";
         }
 
-        public IResult Register(RegisterAuthDto authDto)
+        public IResult Register(RegisterAuthDto authDto, int imageSize)
         {
+            imageSize = 2;
+
+
             UserValidator userValidator = new UserValidator();
-            ValidationTool.Validate(userValidator,authDto);
+            ValidationTool.Validate(userValidator, authDto);
 
             var isExistEmail = CheckIfEmailExists(authDto.Email);
 
             if (isExistEmail)
             {
+                var isAboveForImage = CheckIfImageSizeOneMBAbove(imageSize);
+
+                if (isAboveForImage)
+                    return new ErrorResult("Resim 1 Mb'den küçük olmalıdır");
+
                 _userService.Add(authDto);
                 return new SuccessResult("Kullanıcı başarıyla oluşturuldu");
             }
@@ -50,10 +58,18 @@ namespace Bussiness.Concrete
                 return new ErrorResult("Bu mail adresi daha önce kullanılmıştır");
         }
 
+    
         bool CheckIfEmailExists(string email)
         {
             var list = _userService.GetByEmail(email);
             return list == null ? true : false;
+        }
+
+        bool CheckIfImageSizeOneMBAbove(int imageSize)
+        {
+            if (imageSize > 1)
+                return true;
+            return false;
         }
     }
 }
