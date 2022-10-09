@@ -1,4 +1,5 @@
 ﻿using Bussiness.Abstract;
+using Bussiness.ValidationRules.FluentValidation;
 using Core.Utilities.Hashing;
 using DataAccess.Abstract;
 using Entities.Concrete;
@@ -30,25 +31,19 @@ namespace Bussiness.Concrete
             return "Giriş Başarısız";
         }
 
-        public string Register(RegisterAuthDto authDto)
+        public List<string> Register(RegisterAuthDto authDto)
         {
-            if (authDto.Name == "")
-                return "Kullanıcı adı boş olamaz";
+            //Validator'dan gelen response'u handle ettik
+            UserValidator userValidator = new UserValidator();
+            var validatorResult = userValidator.Validate(authDto);
 
-            if (authDto.Email == "")
-                return "Email boş olamaz";
+            if (validatorResult.IsValid)
+            {
+                _userService.Add(authDto);
+                return new List<string> { "Kullanıcı başarıyla oluşturuldu" };
+            }
 
-            if (authDto.Password == "")
-                return "Parola boş olamaz";
-
-            if (authDto.ImageUrl == "")
-                return "Resim boş olamaz";
-
-            if (authDto.Password.Length < 6)
-                return "Şifre en az 6 karakter olmalıdır";
-
-            _userService.Add(authDto);
-            return "Kullanıcı kaydı başarıyla tamamlandı";
+            return validatorResult.Errors.Select(i=>i.ErrorMessage).ToList();
         }
     }
 }
