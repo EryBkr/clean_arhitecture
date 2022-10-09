@@ -1,6 +1,7 @@
 ﻿using Bussiness.Abstract;
 using Bussiness.ValidationRules.FluentValidation;
 using Core.CrossCuttingConcerns.Validation;
+using Core.Utilities.Business;
 using Core.Utilities.Hashing;
 using Core.Utilities.Results.Abstract;
 using Core.Utilities.Results.Concrete;
@@ -10,6 +11,7 @@ using Entities.Dtos;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -42,34 +44,28 @@ namespace Bussiness.Concrete
             UserValidator userValidator = new UserValidator();
             ValidationTool.Validate(userValidator, authDto);
 
-            var isExistEmail = CheckIfEmailExists(authDto.Email);
+            //Bütün iş kurallarımı tek bir metot üzerinden yürüyorum
+            IResult result = BusinessRules.Run(CheckIfEmailExists(authDto.Email), CheckIfImageSizeOneMBAbove(imageSize));
 
-            if (isExistEmail)
-            {
-                var isAboveForImage = CheckIfImageSizeOneMBAbove(imageSize);
+            if (result != null)
+                return result;
 
-                if (isAboveForImage)
-                    return new ErrorResult("Resim 1 Mb'den küçük olmalıdır");
-
-                _userService.Add(authDto);
-                return new SuccessResult("Kullanıcı başarıyla oluşturuldu");
-            }
-            else
-                return new ErrorResult("Bu mail adresi daha önce kullanılmıştır");
+            _userService.Add(authDto);
+            return new SuccessResult("Kullanıcı başarıyla oluşturuldu");
         }
 
-    
-        bool CheckIfEmailExists(string email)
+
+        private IResult CheckIfEmailExists(string email)
         {
             var list = _userService.GetByEmail(email);
-            return list == null ? true : false;
+            return list == null ? new SuccessResult() : new ErrorResult("Bu mail adresi daha önce kullanılmış");
         }
 
-        bool CheckIfImageSizeOneMBAbove(int imageSize)
+        private IResult CheckIfImageSizeOneMBAbove(int imageSize)
         {
             if (imageSize > 1)
-                return true;
-            return false;
+                return new ErrorResult("Resim 1 Mb'den küçük olmalıdır");
+            return new SuccessResult();
         }
     }
 }
