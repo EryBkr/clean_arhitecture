@@ -1,5 +1,6 @@
 ﻿using Bussiness.Abstract;
 using Bussiness.ValidationRules.FluentValidation;
+using Core.CrossCuttingConcerns.Validation;
 using Core.Utilities.Hashing;
 using DataAccess.Abstract;
 using Entities.Concrete;
@@ -31,19 +32,13 @@ namespace Bussiness.Concrete
             return "Giriş Başarısız";
         }
 
-        public List<string> Register(RegisterAuthDto authDto)
+        public string Register(RegisterAuthDto authDto)
         {
-            //Validator'dan gelen response'u handle ettik
             UserValidator userValidator = new UserValidator();
-            var validatorResult = userValidator.Validate(authDto);
+            ValidationTool.Validate(userValidator,authDto);
 
-            if (validatorResult.IsValid)
-            {
-                _userService.Add(authDto);
-                return new List<string> { "Kullanıcı başarıyla oluşturuldu" };
-            }
-
-            return validatorResult.Errors.Select(i=>i.ErrorMessage).ToList();
+            _userService.Add(authDto);
+            return "Kullanıcı başarıyla oluşturuldu";
         }
     }
 }
