@@ -1,5 +1,6 @@
 ﻿using Bussiness.Abstract;
 using Entities.Concrete;
+using Entities.Dtos;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,11 +17,10 @@ namespace WebAPI.Controllers
             _userService = userService;
         }
 
-        [HttpPost("add")]
-        public IActionResult Add(User user)
+        [HttpGet]
+        public IActionResult GetList()
         {
-            _userService.Add(user);
-            return Ok();
+            return Ok(_userService.GetList());
         }
     }
 }

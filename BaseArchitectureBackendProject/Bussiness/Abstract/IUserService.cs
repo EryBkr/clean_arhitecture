@@ -1,4 +1,5 @@
 ﻿using Entities.Concrete;
+using Entities.Dtos;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,8 @@ namespace Bussiness.Abstract
 {
     public interface IUserService
     {
-        void Add(User user);
+        List<User> GetList();
+        User GetByEmail(string email);
+        void Add(RegisterAuthDto register);
     }
 }
