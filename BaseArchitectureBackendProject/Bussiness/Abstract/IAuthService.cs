@@ -1,4 +1,6 @@
-﻿using Entities.Dtos;
+﻿using Core.Utilities.Results.Abstract;
+using Core.Utilities.Results.Concrete;
+using Entities.Dtos;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +11,7 @@ namespace Bussiness.Abstract
 {
     public interface IAuthService
     {
-        string Register(RegisterAuthDto authDto);
+        IResult Register(RegisterAuthDto authDto);
         string Login(LoginAuthDto loginDto);
     }
 }

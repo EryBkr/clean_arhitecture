@@ -20,7 +20,10 @@ namespace WebAPI.Controllers
         public IActionResult Register(RegisterAuthDto user)
         {
             var result=_authService.Register(user);
-            return Ok(result);
+            if (result.Success)
+                return Ok(result);
+
+            return BadRequest(result);
         }
 
         [HttpPost("login")]

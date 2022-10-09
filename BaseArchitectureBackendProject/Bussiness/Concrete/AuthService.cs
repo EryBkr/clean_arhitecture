@@ -2,6 +2,8 @@
 using Bussiness.ValidationRules.FluentValidation;
 using Core.CrossCuttingConcerns.Validation;
 using Core.Utilities.Hashing;
+using Core.Utilities.Results.Abstract;
+using Core.Utilities.Results.Concrete;
 using DataAccess.Abstract;
 using Entities.Concrete;
 using Entities.Dtos;
@@ -32,13 +34,26 @@ namespace Bussiness.Concrete
             return "Giriş Başarısız";
         }
 
-        public string Register(RegisterAuthDto authDto)
+        public IResult Register(RegisterAuthDto authDto)
         {
             UserValidator userValidator = new UserValidator();
             ValidationTool.Validate(userValidator,authDto);
 
-            _userService.Add(authDto);
-            return "Kullanıcı başarıyla oluşturuldu";
+            var isExistEmail = CheckIfEmailExists(authDto.Email);
+
+            if (isExistEmail)
+            {
+                _userService.Add(authDto);
+                return new SuccessResult("Kullanıcı başarıyla oluşturuldu");
+            }
+            else
+                return new ErrorResult("Bu mail adresi daha önce kullanılmıştır");
+        }
+
+        bool CheckIfEmailExists(string email)
+        {
+            var list = _userService.GetByEmail(email);
+            return list == null ? true : false;
         }
     }
 }
