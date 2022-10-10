@@ -1,6 +1,8 @@
 ﻿using Autofac;
+using Autofac.Extras.DynamicProxy;
 using Bussiness.Abstract;
 using Bussiness.Concrete;
+using Core.Utilities.Interceptors;
 using DataAccess.Abstract;
 using DataAccess.Concrete.EntityFramework;
 using System;
@@ -12,7 +14,7 @@ using System.Threading.Tasks;
 namespace Bussiness.DependencyResolvers.AutoFac
 {
     //Module bize AutoFac Library'sinden gelmektedir
-    public class AutoFacBusinessModule:Module
+    public class AutoFacBusinessModule : Module
     {
         protected override void Load(ContainerBuilder builder)
         {
@@ -27,6 +29,16 @@ namespace Bussiness.DependencyResolvers.AutoFac
             builder.RegisterType<EfUserOperationClaimDal>().As<IUserOperationClaimDal>();
 
             builder.RegisterType<AuthService>().As<IAuthService>();
+
+            //AOP için ekledik
+            var assembly = System.Reflection.Assembly.GetExecutingAssembly();
+            builder.RegisterAssemblyTypes(assemblies: assembly)
+                .AsImplementedInterfaces()
+                .EnableInterfaceInterceptors(
+                new Castle.DynamicProxy.ProxyGenerationOptions() 
+                {
+                    Selector=new AspectInterceptorSelector()
+                }).SingleInstance();
         }
     }
 }

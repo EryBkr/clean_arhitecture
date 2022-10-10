@@ -1,5 +1,6 @@
 ﻿using Bussiness.Abstract;
 using Bussiness.ValidationRules.FluentValidation;
+using Core.Aspects.Validation;
 using Core.CrossCuttingConcerns.Validation;
 using Core.Utilities.Business;
 using Core.Utilities.Hashing;
@@ -36,13 +37,11 @@ namespace Bussiness.Concrete
             return "Giriş Başarısız";
         }
 
+
+        [ValidationAspect(typeof(UserValidator))]
         public IResult Register(RegisterAuthDto authDto, int imageSize)
         {
             imageSize = 2;
-
-
-            UserValidator userValidator = new UserValidator();
-            ValidationTool.Validate(userValidator, authDto);
 
             //Bütün iş kurallarımı tek bir metot üzerinden yürüyorum
             IResult result = BusinessRules.Run(CheckIfEmailExists(authDto.Email), CheckIfImageSizeOneMBAbove(imageSize));
