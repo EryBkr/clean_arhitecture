@@ -17,7 +17,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost("register")]
-        public IActionResult Register(RegisterAuthDto user)
+        public IActionResult Register([FromForm] RegisterAuthDto user) //FromForm kullanma sebebimiz swagger üzerinden dosya yükleyebilmekti
         {
             var result=_authService.Register(user);
             if (result.Success)

@@ -11,7 +11,7 @@ namespace Bussiness.Abstract
 {
     public interface IAuthService
     {
-        IResult Register(RegisterAuthDto authDto, int imageSize=2);
+        IResult Register(RegisterAuthDto authDto);
         string Login(LoginAuthDto loginDto);
     }
 }

@@ -30,6 +30,8 @@ namespace Bussiness.DependencyResolvers.AutoFac
 
             builder.RegisterType<AuthService>().As<IAuthService>();
 
+            builder.RegisterType<FileService>().As<IFileService>().SingleInstance();
+
             //AOP için ekledik
             var assembly = System.Reflection.Assembly.GetExecutingAssembly();
             builder.RegisterAssemblyTypes(assemblies: assembly)

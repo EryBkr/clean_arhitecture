@@ -3,6 +3,7 @@ using Core.Utilities.Hashing;
 using DataAccess.Abstract;
 using Entities.Concrete;
 using Entities.Dtos;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,29 +15,21 @@ namespace Bussiness.Concrete
     public class UserService : IUserService
     {
         private readonly IUserDal _userDal;
+        private readonly IFileService _fileService;
 
-        public UserService(IUserDal userDal)
+        public UserService(IUserDal userDal, IFileService fileService)
         {
             _userDal = userDal;
+            _fileService = fileService;
         }
 
-        public void Add(RegisterAuthDto register)
+        public async void Add(RegisterAuthDto register)
         {
-            byte[] passwordHash, passwordSalt;
+            //Resim servisi aracılğıyla kayıt işlemini yapıyorum
+            var fileName = await _fileService.FileSave("./Content/img/", register.Image);
 
-            //Parola hash'leniyor
-            //out keyword'ü tekrar atama işlemi yapmamıza gerek olmamasını sağlıyor
-            HashingHelper.CreatePassword(register.Password, out passwordHash, out passwordSalt);
-
-            User userEntity = new User()
-            {
-                Email = register.Email,
-                Name = register.Name,
-                ImageUrl = register.ImageUrl,
-                PasswordHash = passwordHash,
-                PasswordSalt = passwordSalt
-            };
-            _userDal.Add(userEntity);
+            //Create User
+            _userDal.Add(CreateUser(register, fileName));
         }
 
         public User GetByEmail(string email)
@@ -47,6 +40,26 @@ namespace Bussiness.Concrete
         public List<User> GetList()
         {
             return _userDal.GetAll();
+        }
+
+        private User CreateUser(RegisterAuthDto registerEntity, string fileName)
+        {
+            byte[] passwordHash, passwordSalt;
+
+            //Parola hash'leniyor
+            //out keyword'ü tekrar atama işlemi yapmamıza gerek olmamasını sağlıyor
+            HashingHelper.CreatePassword(registerEntity.Password, out passwordHash, out passwordSalt);
+
+            User userEntity = new User()
+            {
+                Email = registerEntity.Email,
+                Name = registerEntity.Name,
+                ImageUrl = fileName,
+                PasswordHash = passwordHash,
+                PasswordSalt = passwordSalt
+            };
+
+            return userEntity;
         }
     }
 }

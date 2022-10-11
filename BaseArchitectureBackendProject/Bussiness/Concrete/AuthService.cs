@@ -1,20 +1,12 @@
 ﻿using Bussiness.Abstract;
 using Bussiness.ValidationRules.FluentValidation;
 using Core.Aspects.Validation;
-using Core.CrossCuttingConcerns.Validation;
 using Core.Utilities.Business;
 using Core.Utilities.Hashing;
 using Core.Utilities.Results.Abstract;
 using Core.Utilities.Results.Concrete;
-using DataAccess.Abstract;
-using Entities.Concrete;
 using Entities.Dtos;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http.Headers;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 
 namespace Bussiness.Concrete
 {
@@ -39,12 +31,16 @@ namespace Bussiness.Concrete
 
 
         [ValidationAspect(typeof(UserValidator))]
-        public IResult Register(RegisterAuthDto authDto, int imageSize)
+        public IResult Register(RegisterAuthDto authDto)
         {
-            imageSize = 2;
 
             //Bütün iş kurallarımı tek bir metot üzerinden yürüyorum
-            IResult result = BusinessRules.Run(CheckIfEmailExists(authDto.Email), CheckIfImageSizeOneMBAbove(imageSize));
+            IResult result = BusinessRules.Run
+                   (
+                    CheckIfEmailExists(authDto.Email),
+                    CheckIfImageSizeOneMBAbove(authDto.Image.Length),
+                    CheckIfImageExtensionsAllow(authDto.Image)
+                   );
 
             if (result != null)
                 return result;
@@ -60,10 +56,22 @@ namespace Bussiness.Concrete
             return list == null ? new SuccessResult() : new ErrorResult("Bu mail adresi daha önce kullanılmış");
         }
 
-        private IResult CheckIfImageSizeOneMBAbove(int imageSize)
+        private IResult CheckIfImageSizeOneMBAbove(long imageSize)
         {
-            if (imageSize > 1)
+            decimal imageMbSize = Convert.ToDecimal(imageSize * 0.000001);
+            if (imageMbSize > 1)
                 return new ErrorResult("Resim 1 Mb'den küçük olmalıdır");
+            return new SuccessResult();
+        }
+
+        private IResult CheckIfImageExtensionsAllow(IFormFile file)
+        {
+            string fileName = file.FileName;
+            var fileExtension = Path.GetExtension(fileName).ToLower();
+
+            var allowFileExtensions = new List<string> { ".jpg", ".jpeg", ".gif", ".png" };
+            if (!allowFileExtensions.Contains(fileExtension))
+                return new ErrorResult("Resim \".jpg\", \".jpeg\", \".gif\", \".png\" türlerinden birisi olmalıdır");
             return new SuccessResult();
         }
     }
