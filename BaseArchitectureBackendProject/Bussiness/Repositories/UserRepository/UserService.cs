@@ -1,5 +1,9 @@
-﻿using Bussiness.Utilities.File;
+﻿using Bussiness.Repositories.UserRepository.Constans;
+using Bussiness.Utilities.File;
 using Core.Utilities.Hashing;
+using Core.Utilities.Results.Abstract;
+using Core.Utilities.Results.Concrete;
+using Core.Utilities.Results.Concrete.DataResults;
 using DataAccess.Repositories.UserRepository;
 using Entities.Concrete;
 using Entities.Dtos;
@@ -32,14 +36,31 @@ namespace Bussiness.Repositories.UserRepository
             _userDal.Add(CreateUser(register, fileName));
         }
 
+        public IResult Delete(User user)
+        {
+            _userDal.Delete(user);
+            return new SuccessResult(Messages.DeletedUser);
+        }
+
         public User GetByEmail(string email)
         {
             return _userDal.Get(i => i.Email == email);
         }
 
+        public IDataResult<User> GetById(int id)
+        {
+            return new SuccessDataResult<User>(_userDal.Get(i => i.Id == id));
+        }
+
         public List<User> GetList()
         {
             return _userDal.GetAll();
+        }
+
+        public IResult Update(User user)
+        {
+            _userDal.Update(user);
+            return new SuccessResult(Messages.UpdatedUser);
         }
 
         private User CreateUser(RegisterAuthDto registerEntity, string fileName)
@@ -60,6 +81,11 @@ namespace Bussiness.Repositories.UserRepository
             };
 
             return userEntity;
+        }
+
+        IDataResult<List<User>> IUserService.GetList()
+        {
+            return new SuccessDataResult<List<User>>(_userDal.GetAll());
         }
     }
 }
