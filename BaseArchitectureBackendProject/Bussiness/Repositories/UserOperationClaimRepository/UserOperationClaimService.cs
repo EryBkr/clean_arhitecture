@@ -1,5 +1,4 @@
-﻿using Bussiness.Abstract;
-using DataAccess.Abstract;
+﻿using DataAccess.Repositories.UserOperationClaimRepository;
 using Entities.Concrete;
 using System;
 using System.Collections.Generic;
@@ -7,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Bussiness.Concrete
+namespace Bussiness.Repositories.UserOperationClaimRepository
 {
     public class UserOperationClaimService : IUserOperationClaimService
     {

@@ -1,6 +1,6 @@
 ﻿using Entities.Concrete;
 
-namespace Bussiness.Abstract
+namespace Bussiness.Repositories.OperationClaimRepository
 {
     public interface IOperationClaimService
     {

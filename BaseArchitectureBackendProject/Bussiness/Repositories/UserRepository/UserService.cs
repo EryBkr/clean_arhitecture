@@ -1,6 +1,6 @@
-﻿using Bussiness.Abstract;
+﻿using Bussiness.Utilities.File;
 using Core.Utilities.Hashing;
-using DataAccess.Abstract;
+using DataAccess.Repositories.UserRepository;
 using Entities.Concrete;
 using Entities.Dtos;
 using Microsoft.Win32;
@@ -10,7 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Bussiness.Concrete
+namespace Bussiness.Repositories.UserRepository
 {
     public class UserService : IUserService
     {

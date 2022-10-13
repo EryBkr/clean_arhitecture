@@ -6,9 +6,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DataAccess.Abstract
+namespace DataAccess.Repositories.UserOperationClaimRepository
 {
-    public interface IUserOperationClaimDal:IEntityRepository<UserOperationClaim>
+    public interface IUserOperationClaimDal : IEntityRepository<UserOperationClaim>
     {
     }
 }

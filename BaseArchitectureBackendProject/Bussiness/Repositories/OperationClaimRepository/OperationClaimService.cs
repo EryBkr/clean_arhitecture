@@ -1,8 +1,7 @@
-﻿using Bussiness.Abstract;
-using DataAccess.Abstract;
+﻿using DataAccess.Repositories.OperationClaimRepository;
 using Entities.Concrete;
 
-namespace Bussiness.Concrete
+namespace Bussiness.Repositories.OperationClaimRepository
 {
     public class OperationClaimService : IOperationClaimService
     {

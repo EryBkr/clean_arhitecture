@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Bussiness.Abstract
+namespace Bussiness.Authentication
 {
     public interface IAuthService
     {

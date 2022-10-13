@@ -1,4 +1,4 @@
-﻿using Bussiness.Abstract;
+﻿using Bussiness.Repositories.UserRepository;
 using Bussiness.ValidationRules.FluentValidation;
 using Core.Aspects.Validation;
 using Core.Utilities.Business;
@@ -8,7 +8,7 @@ using Core.Utilities.Results.Concrete;
 using Entities.Dtos;
 using Microsoft.AspNetCore.Http;
 
-namespace Bussiness.Concrete
+namespace Bussiness.Authentication
 {
     public class AuthService : IAuthService
     {

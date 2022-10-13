@@ -1,7 +1,7 @@
 ﻿using Core.DataAccess;
 using Entities.Concrete;
 
-namespace DataAccess.Abstract
+namespace DataAccess.Repositories.OperationClaimRepository
 {
     public interface IOperationClaimDal : IEntityRepository<OperationClaim>
     {

@@ -1,9 +1,8 @@
 ﻿using Core.DataAccess.EntityFramework;
-using DataAccess.Abstract;
-using DataAccess.Concrete.EntityFramework.Context;
+using DataAccess.Concrete.EntityFramework;
 using Entities.Concrete;
 
-namespace DataAccess.Concrete.EntityFramework
+namespace DataAccess.Repositories.UserRepository
 {
     public class EfUserDal : EfEntityRepositoryBase<User, BaseArchContext>, IUserDal
     {

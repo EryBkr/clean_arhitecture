@@ -1,4 +1,4 @@
-﻿using Bussiness.Abstract;
+﻿using Bussiness.Repositories.UserOperationClaimRepository;
 using Entities.Concrete;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
