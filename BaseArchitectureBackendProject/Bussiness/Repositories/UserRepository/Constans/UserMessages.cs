@@ -6,9 +6,11 @@ using System.Threading.Tasks;
 
 namespace Bussiness.Repositories.UserRepository.Constans
 {
-    public class Messages
+    public class UserMessages
     {
         public const string UpdatedUser = "Kullanıcı kaydı başarıyla güncellendi";
         public const string DeletedUser = "Kullanıcı kaydı başarıyla silindi";
+        public static string WrongCurrentPassword = "Mevcut şifrenizi yanlış girdiniz";
+        public static string ChangedPassword = "Şifre değişimi başarılı";
     }
 }

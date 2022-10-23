@@ -9,9 +9,9 @@ using System.Threading.Tasks;
 
 namespace Bussiness.ValidationRules.FluentValidation
 {
-    public class UserValidator : AbstractValidator<RegisterAuthDto>
+    public class AuthValidator : AbstractValidator<RegisterAuthDto>
     {
-        public UserValidator()
+        public AuthValidator()
         {
             RuleFor(p => p.Name).NotEmpty().WithMessage("İsim alanı boş olamaz");
             RuleFor(p => p.Email).NotEmpty().WithMessage("Mail alanı boş olamaz");
@@ -22,7 +22,7 @@ namespace Bussiness.ValidationRules.FluentValidation
             RuleFor(p => p.Password).Matches("[a-z]").WithMessage("Şifreniz en az bir küçük harf içermelidir");
             RuleFor(p => p.Password).Matches("[0-9]").WithMessage("Şifreniz en az bir rakam içermelidir");
             RuleFor(p => p.Password).Matches("[^a-zA-z0-9]").WithMessage("Şifreniz en az bir adet özel karakter içermelidir");
-            RuleFor(p => p.Image).NotEmpty().NotNull().WithMessage("Resmi alanı boş olamaz");
+            RuleFor(p => p.Image.FileName).NotEmpty().NotNull().WithMessage("Resmi alanı boş olamaz");
         }
     }
 }

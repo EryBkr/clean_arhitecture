@@ -16,6 +16,7 @@ namespace Bussiness.Repositories.UserRepository
         void Add(RegisterAuthDto register);
         IDataResult<User> GetById(int id);
         IResult Update(User user);
+        IResult ChangePassword(UserChangePasswordDto userChangePasswordDto);
         IResult Delete(User user);
     }
 }

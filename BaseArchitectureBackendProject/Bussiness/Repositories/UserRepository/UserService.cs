@@ -1,5 +1,7 @@
 ﻿using Bussiness.Repositories.UserRepository.Constans;
+using Bussiness.Repositories.UserRepository.Validation.FluentValidation;
 using Bussiness.Utilities.File;
+using Core.Aspects.Validation;
 using Core.Utilities.Hashing;
 using Core.Utilities.Results.Abstract;
 using Core.Utilities.Results.Concrete;
@@ -36,10 +38,30 @@ namespace Bussiness.Repositories.UserRepository
             _userDal.Add(CreateUser(register, fileName));
         }
 
+        [ValidationAspect(typeof(UserChangePasswordValidator))]
+        public IResult ChangePassword(UserChangePasswordDto userChangePasswordDto)
+        {
+            var user = _userDal.Get(p => p.Id == userChangePasswordDto.UserId);
+            bool result = HashingHelper.VerifyPasswordHash(userChangePasswordDto.OldPassword, user.PasswordHash, user.PasswordSalt);
+
+            if (!result)
+                return new ErrorResult(UserMessages.WrongCurrentPassword);
+
+            byte[] passwordHash, passwordSalt;
+            HashingHelper.CreatePassword(userChangePasswordDto.NewPassword, out passwordHash, out passwordSalt);
+
+            user.PasswordHash = passwordHash;
+            user.PasswordSalt = passwordSalt;
+
+            _userDal.Update(user);
+
+            return new SuccessResult(UserMessages.ChangedPassword);
+        }
+
         public IResult Delete(User user)
         {
             _userDal.Delete(user);
-            return new SuccessResult(Messages.DeletedUser);
+            return new SuccessResult(UserMessages.DeletedUser);
         }
 
         public User GetByEmail(string email)
@@ -57,10 +79,11 @@ namespace Bussiness.Repositories.UserRepository
             return _userDal.GetAll();
         }
 
+        [ValidationAspect(typeof(UserValidator))]
         public IResult Update(User user)
         {
             _userDal.Update(user);
-            return new SuccessResult(Messages.UpdatedUser);
+            return new SuccessResult(UserMessages.UpdatedUser);
         }
 
         private User CreateUser(RegisterAuthDto registerEntity, string fileName)

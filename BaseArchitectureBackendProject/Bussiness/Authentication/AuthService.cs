@@ -30,7 +30,7 @@ namespace Bussiness.Authentication
         }
 
 
-        [ValidationAspect(typeof(UserValidator))]
+        [ValidationAspect(typeof(AuthValidator))]
         public IResult Register(RegisterAuthDto authDto)
         {
 

@@ -1,9 +1,14 @@
-﻿using Entities.Concrete;
+﻿using Core.Utilities.Results.Abstract;
+using Entities.Concrete;
 
 namespace Bussiness.Repositories.OperationClaimRepository
 {
     public interface IOperationClaimService
     {
-        void Add(OperationClaim claim);
+        IResult Add(OperationClaim claim);
+        IResult Update(OperationClaim claim);
+        IResult Delete(OperationClaim claim);
+        IDataResult<List<OperationClaim>> GetList();
+        IDataResult<OperationClaim> GetById(int id);
     }
 }

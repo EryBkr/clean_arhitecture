@@ -1,4 +1,5 @@
-﻿using Entities.Concrete;
+﻿using Core.Utilities.Results.Abstract;
+using Entities.Concrete;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,10 @@ namespace Bussiness.Repositories.UserOperationClaimRepository
 {
     public interface IUserOperationClaimService
     {
-        void Add(UserOperationClaim userOperationClaim);
+        IResult Add(UserOperationClaim claim);
+        IResult Update(UserOperationClaim claim);
+        IResult Delete(UserOperationClaim claim);
+        IDataResult<List<UserOperationClaim>> GetList();
+        IDataResult<UserOperationClaim> GetById(int id);
     }
 }
