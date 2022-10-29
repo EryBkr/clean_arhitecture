@@ -1,6 +1,7 @@
 ﻿using Bussiness.Repositories.UserRepository.Constans;
 using Bussiness.Repositories.UserRepository.Validation.FluentValidation;
 using Bussiness.Utilities.File;
+using Core.Aspects.Caching;
 using Core.Aspects.Transaction;
 using Core.Aspects.Validation;
 using Core.Utilities.Hashing;
@@ -30,6 +31,8 @@ namespace Bussiness.Repositories.UserRepository
             _fileService = fileService;
         }
 
+        //Silme işlemi cache'in eklendiği key'e ait olmalı (ya da key'in bir bölümünü içermeli)
+        [RemoveCacheAspect("IUserService.GetList")]
         public async void Add(RegisterAuthDto register)
         {
             //Resim servisi aracılğıyla kayıt işlemini yapıyorum
@@ -75,10 +78,10 @@ namespace Bussiness.Repositories.UserRepository
             return new SuccessDataResult<User>(_userDal.Get(i => i.Id == id));
         }
 
-        public List<User> GetList()
-        {
-            return _userDal.GetAll();
-        }
+        //public List<User> GetList()
+        //{
+        //    return _userDal.GetAll();
+        //}
 
         public List<OperationClaim> GetUserOperationClaims(int userId)
         {
@@ -113,7 +116,9 @@ namespace Bussiness.Repositories.UserRepository
             return userEntity;
         }
 
-        IDataResult<List<User>> IUserService.GetList()
+        //Cache sayesinde 60 dk boyunca key'e ait değeri saklamış olacağız
+        [CacheAspect(60)]
+        public IDataResult<List<User>> GetList()
         {
             return new SuccessDataResult<List<User>>(_userDal.GetAll());
         }
