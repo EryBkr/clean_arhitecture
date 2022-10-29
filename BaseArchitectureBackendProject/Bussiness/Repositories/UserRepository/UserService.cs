@@ -79,6 +79,11 @@ namespace Bussiness.Repositories.UserRepository
             return _userDal.GetAll();
         }
 
+        public List<OperationClaim> GetUserOperationClaims(int userId)
+        {
+            return _userDal.UserOperationClaimByUserId(userId);
+        }
+
         [ValidationAspect(typeof(UserValidator))]
         public IResult Update(User user)
         {

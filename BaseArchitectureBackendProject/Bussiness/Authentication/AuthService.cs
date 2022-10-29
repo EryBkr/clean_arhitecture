@@ -5,6 +5,9 @@ using Core.Utilities.Business;
 using Core.Utilities.Hashing;
 using Core.Utilities.Results.Abstract;
 using Core.Utilities.Results.Concrete;
+using Core.Utilities.Results.Concrete.DataResults;
+using Core.Utilities.Security.Jwt;
+using Entities.Concrete;
 using Entities.Dtos;
 using Microsoft.AspNetCore.Http;
 
@@ -13,20 +16,29 @@ namespace Bussiness.Authentication
     public class AuthService : IAuthService
     {
         private readonly IUserService _userService;
+        private readonly ITokenHandler _tokenHandler;
 
-        public AuthService(IUserService userService)
+        public AuthService(IUserService userService, ITokenHandler tokenHandler)
         {
             _userService = userService;
+            _tokenHandler = tokenHandler;
         }
 
-        public string Login(LoginAuthDto loginDto)
+        public IDataResult<Token> Login(LoginAuthDto loginDto)
         {
             var user = _userService.GetByEmail(loginDto.Email);
             var isVerifyPassword = HashingHelper.VerifyPasswordHash(loginDto.Password, user.PasswordHash, user.PasswordSalt);
 
+            //User Id kullanarak kullanıcıya ait operationClaim leri aldım
+            List<OperationClaim> operationClaims = _userService.GetUserOperationClaims(user.Id);
+
             if (isVerifyPassword)
-                return "Giriş başarılı";
-            return "Giriş Başarısız";
+            {
+                Token token = new Token();
+                token = _tokenHandler.CreateToken(user, operationClaims);
+                return new SuccessDataResult<Token>(token);
+            }
+            return new ErrorDataResult<Token>("Kullanıcı mail ya da şifre bilgisi yanlış");
         }
 
 

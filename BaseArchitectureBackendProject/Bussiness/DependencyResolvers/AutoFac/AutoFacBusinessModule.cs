@@ -6,6 +6,7 @@ using Bussiness.Repositories.UserOperationClaimRepository;
 using Bussiness.Repositories.UserRepository;
 using Bussiness.Utilities.File;
 using Core.Utilities.Interceptors;
+using Core.Utilities.Security.Jwt;
 using DataAccess.Repositories.OperationClaimRepository;
 using DataAccess.Repositories.UserOperationClaimRepository;
 using DataAccess.Repositories.UserRepository;
@@ -33,6 +34,8 @@ namespace Bussiness.DependencyResolvers.AutoFac
             builder.RegisterType<EfUserOperationClaimDal>().As<IUserOperationClaimDal>();
 
             builder.RegisterType<AuthService>().As<IAuthService>();
+
+            builder.RegisterType<TokenHandler>().As<ITokenHandler>();
 
             builder.RegisterType<FileService>().As<IFileService>().SingleInstance();
 

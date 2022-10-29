@@ -30,7 +30,7 @@ namespace WebAPI.Controllers
         public IActionResult Login(LoginAuthDto login)
         {
             var result = _authService.Login(login);
-            return Ok(result);
+            return result.Success ? Ok(result) : BadRequest(result.Message);
         }
     }
 }

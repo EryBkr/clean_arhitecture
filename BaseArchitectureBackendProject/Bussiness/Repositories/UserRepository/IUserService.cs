@@ -18,5 +18,6 @@ namespace Bussiness.Repositories.UserRepository
         IResult Update(User user);
         IResult ChangePassword(UserChangePasswordDto userChangePasswordDto);
         IResult Delete(User user);
+        List<OperationClaim> GetUserOperationClaims(int userId);
     }
 }

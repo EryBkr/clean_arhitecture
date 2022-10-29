@@ -1,5 +1,6 @@
 ﻿using Bussiness.Repositories.UserOperationClaimRepository;
 using Entities.Concrete;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -40,7 +41,7 @@ namespace WebAPI.Controllers
             return result.Success ? Ok(result) : BadRequest(result.Message);
         }
 
-        [HttpGet("getList")]
+        [HttpGet("getList"), Authorize(Roles = "Admin")]
         public IActionResult GetList()
         {
             var result = _userOperationClaimService.GetList();
