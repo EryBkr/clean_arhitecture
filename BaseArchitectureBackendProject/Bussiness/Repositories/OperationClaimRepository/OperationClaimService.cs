@@ -1,5 +1,6 @@
 ﻿using Bussiness.Repositories.OperationClaimRepository.Constant;
 using Bussiness.Repositories.OperationClaimRepository.Validation.FluentValidation;
+using Core.Aspects.Performance;
 using Core.Aspects.Validation;
 using Core.Utilities.Business;
 using Core.Utilities.Results.Abstract;
@@ -44,6 +45,7 @@ namespace Bussiness.Repositories.OperationClaimRepository
             return new SuccessDataResult<OperationClaim>(claim);
         }
 
+        [PerformanceAspect(1)]
         public IDataResult<List<OperationClaim>> GetList()
         {
             var claims = _operationClaimDal.GetAll();
