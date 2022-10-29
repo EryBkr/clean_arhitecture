@@ -98,6 +98,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+//Custom middleware'leri bir arada toplayan middleware
+app.ConfigureCustomExceptionMiddleware();
+
 //Tanýmladýðýmýz cors politikasýný uygulama içerisinde kullandým
 app.UseCors("AllowOrigin");
 

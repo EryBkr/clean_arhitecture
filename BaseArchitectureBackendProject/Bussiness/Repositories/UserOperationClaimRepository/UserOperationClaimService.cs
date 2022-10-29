@@ -57,7 +57,7 @@ namespace Bussiness.Repositories.UserOperationClaimRepository
             return new SuccessDataResult<UserOperationClaim>(claim);
         }
 
-        [SecuredAspect("Admin")]
+        [SecuredAspect("User")]
         public IDataResult<List<UserOperationClaim>> GetList()
         {
             var claims = _userOperationClaimDal.GetAll();
