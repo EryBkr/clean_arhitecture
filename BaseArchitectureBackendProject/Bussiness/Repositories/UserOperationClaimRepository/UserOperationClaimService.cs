@@ -11,6 +11,7 @@ using Bussiness.Repositories.OperationClaimRepository;
 using Bussiness.Repositories.UserRepository;
 using System.Security.Claims;
 using Bussiness.Repositories.OperationClaimRepository.Constant;
+using Bussiness.Aspects.Security;
 
 namespace Bussiness.Repositories.UserOperationClaimRepository
 {
@@ -56,6 +57,7 @@ namespace Bussiness.Repositories.UserOperationClaimRepository
             return new SuccessDataResult<UserOperationClaim>(claim);
         }
 
+        [SecuredAspect("Admin")]
         public IDataResult<List<UserOperationClaim>> GetList()
         {
             var claims = _userOperationClaimDal.GetAll();

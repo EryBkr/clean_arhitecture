@@ -31,7 +31,7 @@ namespace Core.Utilities.Security.Jwt
             SigningCredentials signingCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256Signature);
 
             //Token ayarları
-            token.Expiration = DateTime.Now.AddMinutes(60);
+            token.Expiration = DateTime.Now.AddSeconds(60);
             JwtSecurityToken jwtSecurityToken = new JwtSecurityToken(
                 issuer: _configuration["Token:Issuer"],
                 audience: _configuration["Token:Audience"],

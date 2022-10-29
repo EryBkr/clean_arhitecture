@@ -45,7 +45,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
         ValidateIssuer = true,
 
         //Belli bir süre sonra token bitsin mi?
-        ValidateLifetime = false,
+        ValidateLifetime = true,
 
         //Token key doðrulamasý yapýlsýn mý?
         ValidateIssuerSigningKey = true,

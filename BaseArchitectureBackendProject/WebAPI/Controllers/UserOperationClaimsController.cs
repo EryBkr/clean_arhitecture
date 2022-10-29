@@ -41,7 +41,7 @@ namespace WebAPI.Controllers
             return result.Success ? Ok(result) : BadRequest(result.Message);
         }
 
-        [HttpGet("getList"), Authorize(Roles = "Admin")]
+        [HttpGet("getList")]
         public IActionResult GetList()
         {
             var result = _userOperationClaimService.GetList();
