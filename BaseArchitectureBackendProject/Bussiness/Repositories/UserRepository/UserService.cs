@@ -1,6 +1,7 @@
 ﻿using Bussiness.Repositories.UserRepository.Constans;
 using Bussiness.Repositories.UserRepository.Validation.FluentValidation;
 using Bussiness.Utilities.File;
+using Core.Aspects.Transaction;
 using Core.Aspects.Validation;
 using Core.Utilities.Hashing;
 using Core.Utilities.Results.Abstract;
@@ -85,6 +86,7 @@ namespace Bussiness.Repositories.UserRepository
         }
 
         [ValidationAspect(typeof(UserValidator))]
+        [TransactionAspect]
         public IResult Update(User user)
         {
             _userDal.Update(user);
