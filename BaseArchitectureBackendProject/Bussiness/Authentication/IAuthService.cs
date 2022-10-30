@@ -12,7 +12,7 @@ namespace Bussiness.Authentication
 {
     public interface IAuthService
     {
-        IResult Register(RegisterAuthDto authDto);
-        IDataResult<Token> Login(LoginAuthDto loginDto);
+        Task<IResult> RegisterAsync(RegisterAuthDto authDto);
+        Task<IDataResult<Token>> LoginAsync(LoginAuthDto loginDto);
     }
 }

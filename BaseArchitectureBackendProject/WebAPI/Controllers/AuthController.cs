@@ -17,9 +17,9 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost("register")]
-        public IActionResult Register([FromForm] RegisterAuthDto user) //FromForm kullanma sebebimiz swagger üzerinden dosya yükleyebilmekti
+        public async Task<IActionResult> Register([FromForm] RegisterAuthDto user) //FromForm kullanma sebebimiz swagger üzerinden dosya yükleyebilmekti
         {
-            var result=_authService.Register(user);
+            var result=await _authService.RegisterAsync(user);
             if (result.Success)
                 return Ok(result);
 
@@ -27,9 +27,9 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost("login")]
-        public IActionResult Login(LoginAuthDto login)
+        public async Task<IActionResult> Login(LoginAuthDto login)
         {
-            var result = _authService.Login(login);
+            var result =await _authService.LoginAsync(login);
             return result.Success ? Ok(result) : BadRequest(result.Message);
         }
     }

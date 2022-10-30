@@ -33,19 +33,19 @@ namespace Bussiness.Repositories.UserRepository
 
         //Silme işlemi cache'in eklendiği key'e ait olmalı (ya da key'in bir bölümünü içermeli)
         [RemoveCacheAspect("IUserService.GetList")]
-        public async void Add(RegisterAuthDto register)
+        public async Task AddAsync(RegisterAuthDto register)
         {
             //Resim servisi aracılğıyla kayıt işlemini yapıyorum
-            var fileName = await _fileService.FileSave("./Content/img/", register.Image);
+            var fileName = await _fileService.FileSaveAsync("./Content/img/", register.Image);
 
             //Create User
-            _userDal.Add(CreateUser(register, fileName));
+            await _userDal.AddAsync(CreateUser(register, fileName));
         }
 
         [ValidationAspect(typeof(UserChangePasswordValidator))]
-        public IResult ChangePassword(UserChangePasswordDto userChangePasswordDto)
+        public async Task<IResult> ChangePasswordAsync(UserChangePasswordDto userChangePasswordDto)
         {
-            var user = _userDal.Get(p => p.Id == userChangePasswordDto.UserId);
+            var user =await _userDal.GetAsync(p => p.Id == userChangePasswordDto.UserId);
             bool result = HashingHelper.VerifyPasswordHash(userChangePasswordDto.OldPassword, user.PasswordHash, user.PasswordSalt);
 
             if (!result)
@@ -57,25 +57,25 @@ namespace Bussiness.Repositories.UserRepository
             user.PasswordHash = passwordHash;
             user.PasswordSalt = passwordSalt;
 
-            _userDal.Update(user);
+            await _userDal.UpdateAsync(user);
 
             return new SuccessResult(UserMessages.ChangedPassword);
         }
 
-        public IResult Delete(User user)
+        public async Task<IResult> DeleteAsync(User user)
         {
-            _userDal.Delete(user);
+            await _userDal.DeleteAsync(user);
             return new SuccessResult(UserMessages.DeletedUser);
         }
 
-        public User GetByEmail(string email)
+        public async Task<User> GetByEmailAsync(string email)
         {
-            return _userDal.Get(i => i.Email == email);
+            return await _userDal.GetAsync(i => i.Email == email);
         }
 
-        public IDataResult<User> GetById(int id)
+        public async Task<IDataResult<User>> GetByIdAsync(int id)
         {
-            return new SuccessDataResult<User>(_userDal.Get(i => i.Id == id));
+            return new SuccessDataResult<User>(await _userDal.GetAsync(i => i.Id == id));
         }
 
         //public List<User> GetList()
@@ -90,9 +90,9 @@ namespace Bussiness.Repositories.UserRepository
 
         [ValidationAspect(typeof(UserValidator))]
         [TransactionAspect]
-        public IResult Update(User user)
+        public async Task<IResult> UpdateAsync(User user)
         {
-            _userDal.Update(user);
+            await _userDal.UpdateAsync(user);
             return new SuccessResult(UserMessages.UpdatedUser);
         }
 
@@ -118,9 +118,9 @@ namespace Bussiness.Repositories.UserRepository
 
         //Cache sayesinde 60 dk boyunca key'e ait değeri saklamış olacağız
         [CacheAspect(60)]
-        public IDataResult<List<User>> GetList()
+        public async Task<IDataResult<List<User>>> GetListAsync()
         {
-            return new SuccessDataResult<List<User>>(_userDal.GetAll());
+            return new SuccessDataResult<List<User>>(await _userDal.GetAllAsync());
         }
     }
 }

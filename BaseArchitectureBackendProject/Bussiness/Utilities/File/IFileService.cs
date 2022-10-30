@@ -9,6 +9,7 @@ namespace Bussiness.Utilities.File
 {
     public interface IFileService
     {
-        Task<string> FileSave(string filePath, IFormFile file);
+        Task<string> FileSaveAsync(string filePath, IFormFile file);
+        void FileDeleteToServer(string path);
     }
 }

@@ -10,11 +10,11 @@ namespace Bussiness.Repositories.EmailParameterRepository
 {
     public interface IEmailParameterService
     {
-        IResult Add(EmailParameters emailParameters);
-        IResult Update(EmailParameters emailParameters);
-        IResult Delete(EmailParameters emailParameters);
-        IDataResult<List<EmailParameters>> GetList();
-        IDataResult<EmailParameters> GetById(int id);
-        IResult SendEmail(EmailParameters emailParameters, string body, string subject, string emails);
+        Task<IResult> AddAsync(EmailParameters emailParameters);
+        Task<IResult> UpdateAsync(EmailParameters emailParameters);
+        Task<IResult> DeleteAsync(EmailParameters emailParameters);
+        Task<IDataResult<List<EmailParameters>>> GetListAsync();
+        Task<IDataResult<EmailParameters>> GetByIdAsync(int id);
+        Task<IResult> SendEmailAsync(EmailParameters emailParameters, string body, string subject, string emails);
     }
 }

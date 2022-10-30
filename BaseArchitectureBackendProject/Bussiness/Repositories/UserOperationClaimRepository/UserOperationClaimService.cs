@@ -29,84 +29,86 @@ namespace Bussiness.Repositories.UserOperationClaimRepository
         }
 
         [ValidationAspect(typeof(UserOperationClaimValidator))]
-        public IResult Add(UserOperationClaim claim)
+        public async Task<IResult> AddAsync(UserOperationClaim claim)
         {
             var result = BusinessRules.Run
                 (
-                    IsUserExist(claim.UserId),
-                    IsOperationSetAvaibleForAdd(claim), 
-                    IsOperationClaimExist(claim.OperationClaimId)
+                    await IsUserExistAsync(claim.UserId),
+                    await IsOperationSetAvaibleForAddAsync(claim),
+                    await IsOperationClaimExistAsync(claim.OperationClaimId)
                 );
 
             if (result != null)
                 return new ErrorResult(result.Message);
 
-            _userOperationClaimDal.Add(claim);
+            await _userOperationClaimDal.AddAsync(claim);
             return new SuccessResult(UserOperationClaimMessages.Added);
         }
 
-        public IResult Delete(UserOperationClaim claim)
+        public async Task<IResult> DeleteAsync(UserOperationClaim claim)
         {
-            _userOperationClaimDal.Delete(claim);
+            await _userOperationClaimDal.DeleteAsync(claim);
             return new SuccessResult(UserOperationClaimMessages.Deleted);
         }
 
-        public IDataResult<UserOperationClaim> GetById(int id)
+        public async Task<IDataResult<UserOperationClaim>> GetByIdAsync(int id)
         {
-            var claim = _userOperationClaimDal.Get(i => i.Id == id);
+            var claim =await _userOperationClaimDal.GetAsync(i => i.Id == id);
             return new SuccessDataResult<UserOperationClaim>(claim);
         }
 
         [SecuredAspect("User")]
-        public IDataResult<List<UserOperationClaim>> GetList()
+        public async Task<IDataResult<List<UserOperationClaim>>> GetListAsync()
         {
-            var claims = _userOperationClaimDal.GetAll();
+            var claims =await _userOperationClaimDal.GetAllAsync();
             return new SuccessDataResult<List<UserOperationClaim>>(claims);
         }
 
         [ValidationAspect(typeof(UserOperationClaimValidator))]
-        public IResult Update(UserOperationClaim claim)
+        public async Task<IResult> UpdateAsync(UserOperationClaim claim)
         {
             var result = BusinessRules.Run
                 (
-                    IsUserExist(claim.UserId),
-                    IsOperationSetAvaibleForUpdate(claim),
-                    IsOperationClaimExist(claim.OperationClaimId)
+                    await IsUserExistAsync(claim.UserId),
+                    await IsOperationSetAvaibleForUpdateAsync(claim),
+                    await IsOperationClaimExistAsync(claim.OperationClaimId)
                 );
 
             if (result != null)
                 return new ErrorResult(result.Message);
 
-            _userOperationClaimDal.Update(claim);
+            await _userOperationClaimDal.UpdateAsync(claim);
             return new SuccessResult(UserOperationClaimMessages.Updated);
         }
 
-        private IResult IsUserExist(int userId)
+        private async Task<IResult> IsUserExistAsync(int userId)
         {
-            var result = _userService.GetById(userId).Data;
+            var response =await _userService.GetByIdAsync(userId);
+            var result = response.Data;
             return result == null ? new ErrorResult(UserOperationClaimMessages.UserNotExist) : new SuccessResult();
         }
 
-        private IResult IsOperationSetAvaibleForAdd(UserOperationClaim claim)
+        private async Task<IResult> IsOperationSetAvaibleForAddAsync(UserOperationClaim claim)
         {
-            var result = _userOperationClaimDal.Get(i => i.Id == claim.Id && i.OperationClaimId == claim.OperationClaimId);
+            var result =await _userOperationClaimDal.GetAsync(i => i.Id == claim.Id && i.OperationClaimId == claim.OperationClaimId);
             return result != null ? new ErrorResult(UserOperationClaimMessages.IsOperationSetAvaible) : new SuccessResult();
         }
 
-        private IResult IsOperationSetAvaibleForUpdate(UserOperationClaim claim)
+        private async Task<IResult> IsOperationSetAvaibleForUpdateAsync(UserOperationClaim claim)
         {
-            var currentOperationClaim = _userOperationClaimDal.Get(i => i.Id == claim.Id);
+            var currentOperationClaim =await _userOperationClaimDal.GetAsync(i => i.Id == claim.Id);
             if (currentOperationClaim.UserId != claim.UserId || currentOperationClaim.OperationClaimId != claim.OperationClaimId)
             {
-                var result = _userOperationClaimDal.Get(i => i.Id == claim.Id && i.OperationClaimId == claim.OperationClaimId);
+                var result =await _userOperationClaimDal.GetAsync(i => i.Id == claim.Id && i.OperationClaimId == claim.OperationClaimId);
                 return result != null ? new ErrorResult(UserOperationClaimMessages.IsOperationSetAvaible) : new SuccessResult();
             }
             return new SuccessResult();
         }
 
-        private IResult IsOperationClaimExist(int operationClaimId)
+        private async Task<IResult> IsOperationClaimExistAsync(int operationClaimId)
         {
-            var result = _operationClaimService.GetById(operationClaimId).Data;
+            var response =await _operationClaimService.GetByIdAsync(operationClaimId);
+            var result = response.Data;
             return result == null ? new ErrorResult(UserOperationClaimMessages.OperationClaimExist) : new SuccessResult();
         }
 

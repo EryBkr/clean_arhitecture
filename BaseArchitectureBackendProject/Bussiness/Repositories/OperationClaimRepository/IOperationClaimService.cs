@@ -5,10 +5,10 @@ namespace Bussiness.Repositories.OperationClaimRepository
 {
     public interface IOperationClaimService
     {
-        IResult Add(OperationClaim claim);
-        IResult Update(OperationClaim claim);
-        IResult Delete(OperationClaim claim);
-        IDataResult<List<OperationClaim>> GetList();
-        IDataResult<OperationClaim> GetById(int id);
+        Task<IResult> AddAsync(OperationClaim claim);
+        Task<IResult> UpdateAsync(OperationClaim claim);
+        Task<IResult> DeleteAsync(OperationClaim claim);
+        Task<IDataResult<List<OperationClaim>>> GetListAsync();
+        Task<IDataResult<OperationClaim>> GetByIdAsync(int id);
     }
 }

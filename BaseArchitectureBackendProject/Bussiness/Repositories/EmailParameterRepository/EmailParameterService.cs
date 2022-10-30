@@ -23,29 +23,29 @@ namespace Bussiness.Repositories.EmailParameterRepository
             _emailParameterDal = emailParameterDal;
         }
 
-        public IResult Add(EmailParameters emailParameters)
+        public async Task<IResult> AddAsync(EmailParameters emailParameters)
         {
-            _emailParameterDal.Add(emailParameters);
+            await _emailParameterDal.AddAsync(emailParameters);
             return new SuccessResult(EmailParameterMessages.AddedEmail);
         }
 
-        public IResult Delete(EmailParameters emailParameters)
+        public async Task<IResult> DeleteAsync(EmailParameters emailParameters)
         {
-            _emailParameterDal.Delete(emailParameters);
+            await _emailParameterDal.DeleteAsync(emailParameters);
             return new SuccessResult(EmailParameterMessages.DeletedEmail);
         }
 
-        public IDataResult<EmailParameters> GetById(int id)
+        public async Task<IDataResult<EmailParameters>> GetByIdAsync(int id)
         {
-            return new SuccessDataResult<EmailParameters>(_emailParameterDal.Get(i => i.Id == id));
+            return new SuccessDataResult<EmailParameters>(await _emailParameterDal.GetAsync(i => i.Id == id));
         }
 
-        public IDataResult<List<EmailParameters>> GetList()
+        public async Task<IDataResult<List<EmailParameters>>> GetListAsync()
         {
-            return new SuccessDataResult<List<EmailParameters>>(_emailParameterDal.GetAll());
+            return new SuccessDataResult<List<EmailParameters>>(await _emailParameterDal.GetAllAsync());
         }
 
-        public IResult SendEmail(EmailParameters emailParameters, string body, string subject, string emails)
+        public async Task<IResult> SendEmailAsync(EmailParameters emailParameters, string body, string subject, string emails)
         {
             using (MailMessage mail = new MailMessage())
             {
@@ -65,15 +65,15 @@ namespace Bussiness.Repositories.EmailParameterRepository
                     smtp.Credentials = new NetworkCredential(emailParameters.Email, emailParameters.Password);
                     smtp.EnableSsl = emailParameters.SSL;
                     smtp.Port = emailParameters.Port;
-                    smtp.Send(mail);
+                    await smtp.SendMailAsync(mail);
                 }
             }
             return new SuccessResult("Mail başarıyla gönderilmiştir");
         }
 
-        public IResult Update(EmailParameters emailParameters)
+        public async Task<IResult> UpdateAsync(EmailParameters emailParameters)
         {
-            _emailParameterDal.Update(emailParameters);
+            await _emailParameterDal.UpdateAsync(emailParameters);
             return new SuccessResult(EmailParameterMessages.UpdatedEmail);
         }
     }

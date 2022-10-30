@@ -22,63 +22,63 @@ namespace Bussiness.Repositories.OperationClaimRepository
         }
 
         [ValidationAspect(typeof(OperationClaimValidator))]
-        public IResult Add(OperationClaim claim)
+        public async Task<IResult> AddAsync(OperationClaim claim)
         {
-            IResult result = BusinessRules.Run(IsNameAvaibleForAdd(claim.Name));
+            IResult result = BusinessRules.Run(await IsNameAvaibleForAddAsync(claim.Name));
 
             if (result != null)
                 return new ErrorResult(result.Message);
 
-            _operationClaimDal.Add(claim);
+            await _operationClaimDal.AddAsync(claim);
             return new SuccessResult(OperationClaimMessages.Added);
         }
 
-        public IResult Delete(OperationClaim claim)
+        public async Task<IResult> DeleteAsync(OperationClaim claim)
         {
-            _operationClaimDal.Delete(claim);
+            await _operationClaimDal.DeleteAsync(claim);
             return new SuccessResult(OperationClaimMessages.Deleted);
         }
 
-        public IDataResult<OperationClaim> GetById(int id)
+        public async Task<IDataResult<OperationClaim>> GetByIdAsync(int id)
         {
-            var claim = _operationClaimDal.Get(i => i.Id == id);
+            var claim = await _operationClaimDal.GetAsync(i => i.Id == id);
             return new SuccessDataResult<OperationClaim>(claim);
         }
 
         [PerformanceAspect(1)]
-        public IDataResult<List<OperationClaim>> GetList()
+        public async Task<IDataResult<List<OperationClaim>>> GetListAsync()
         {
-            var claims = _operationClaimDal.GetAll();
+            var claims = await _operationClaimDal.GetAllAsync();
             return new SuccessDataResult<List<OperationClaim>>(claims);
         }
 
         [ValidationAspect(typeof(OperationClaimValidator))]
-        public IResult Update(OperationClaim claim)
+        public async Task<IResult> UpdateAsync(OperationClaim claim)
         {
-            IResult result = BusinessRules.Run(IsNameAvaibleForUpdate(claim));
+            IResult result = BusinessRules.Run(await IsNameAvaibleForUpdateAsync(claim));
 
             if (result != null)
                 return new ErrorResult(result.Message);
 
 
-            _operationClaimDal.Update(claim);
+            await _operationClaimDal.UpdateAsync(claim);
             return new SuccessResult(OperationClaimMessages.Updated);
         }
 
         //İsim daha önce kullanılmış mı? (Ekleme operasyonu için)
-        private IResult IsNameAvaibleForAdd(string name)
+        private async Task<IResult> IsNameAvaibleForAddAsync(string name)
         {
-            var result = _operationClaimDal.Get(i => i.Name == name);
+            var result = await _operationClaimDal.GetAsync(i => i.Name == name);
             return result != null ? new ErrorResult(OperationClaimMessages.NameIsNotAvaible) : new SuccessResult();
         }
 
         //İsim daha önce kullanılmış mı? (Güncelleme operasyonu için)
-        private IResult IsNameAvaibleForUpdate(OperationClaim claim)
+        private async Task<IResult> IsNameAvaibleForUpdateAsync(OperationClaim claim)
         {
-            var currentOperationClaim = _operationClaimDal.Get(i => i.Id == claim.Id);
+            var currentOperationClaim = await _operationClaimDal.GetAsync(i => i.Id == claim.Id);
             if (currentOperationClaim.Name != claim.Name)
             {
-                var currentResult = _operationClaimDal.Get(i => i.Name == claim.Name);
+                var currentResult = await _operationClaimDal.GetAsync(i => i.Name == claim.Name);
                 return currentResult != null ? new ErrorResult(OperationClaimMessages.NameIsNotAvaible) : new SuccessResult();
             }
             return new SuccessResult();

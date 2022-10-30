@@ -19,37 +19,37 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet("getList")]
-        public IActionResult GetList()
+        public async Task<IActionResult> GetList()
         {
-            var result = _userService.GetList();
+            var result =await _userService.GetListAsync();
             return result.Success ? Ok(result) : BadRequest(result.Message);
         }
 
         [HttpGet("getById")]
-        public IActionResult GetById(int userId)
+        public async Task<IActionResult> GetById(int userId)
         {
-            var result = _userService.GetById(userId);
+            var result = await _userService.GetByIdAsync(userId);
             return result.Success ? Ok(result) : BadRequest(result.Message);
         }
 
         [HttpPut("update")]
-        public IActionResult Update(User user)
+        public async Task<IActionResult> Update(User user)
         {
-            var result = _userService.Update(user);
+            var result = await _userService.UpdateAsync(user);
             return result.Success ? Ok(result) : BadRequest(result.Message);
         }
 
         [HttpDelete("delete")]
-        public IActionResult Delete(User user)
+        public async Task<IActionResult> Delete(User user)
         {
-            var result = _userService.Delete(user);
+            var result = await _userService.DeleteAsync(user);
             return result.Success ? Ok(result) : BadRequest(result.Message);
         }
 
         [HttpPut("changePassword")]
-        public IActionResult ChangePassword(UserChangePasswordDto user)
+        public async Task<IActionResult> ChangePassword(UserChangePasswordDto user)
         {
-            var result = _userService.ChangePassword(user);
+            var result = await _userService.ChangePasswordAsync(user);
             return result.Success ? Ok(result) : BadRequest(result.Message);
         }
     }

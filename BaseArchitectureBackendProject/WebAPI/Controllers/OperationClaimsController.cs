@@ -17,41 +17,41 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost("add")]
-        public IActionResult Add(OperationClaim claim)
+        public async Task<IActionResult> Add(OperationClaim claim)
         {
-            var result=_operationClaimService.Add(claim);
+            var result=await _operationClaimService.AddAsync(claim);
 
             return result.Success ? Ok(result) : BadRequest(result.Message);
         }
 
         [HttpPut("update")]
-        public IActionResult Update(OperationClaim claim)
+        public async Task<IActionResult> Update(OperationClaim claim)
         {
-            var result = _operationClaimService.Update(claim);
+            var result = await _operationClaimService.UpdateAsync(claim);
 
             return result.Success ? Ok(result) : BadRequest(result.Message);
         }
 
         [HttpDelete("delete")]
-        public IActionResult Delete(OperationClaim claim)
+        public async Task<IActionResult> Delete(OperationClaim claim)
         {
-            var result = _operationClaimService.Delete(claim);
+            var result = await _operationClaimService.DeleteAsync(claim);
 
             return result.Success ? Ok(result) : BadRequest(result.Message);
         }
 
         [HttpGet("getList")]
-        public IActionResult GetList()
+        public async Task<IActionResult> GetList()
         {
-            var result = _operationClaimService.GetList();
+            var result = await _operationClaimService.GetListAsync();
 
             return result.Success ? Ok(result) : BadRequest(result.Message);
         }
 
         [HttpGet("getById")]
-        public IActionResult Get(int id)
+        public async Task<IActionResult> Get(int id)
         {
-            var result = _operationClaimService.GetById(id);
+            var result = await _operationClaimService.GetByIdAsync(id);
 
             return result.Success ? Ok(result) : BadRequest(result.Message);
         }

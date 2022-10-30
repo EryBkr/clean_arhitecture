@@ -24,9 +24,9 @@ namespace Bussiness.Authentication
             _tokenHandler = tokenHandler;
         }
 
-        public IDataResult<Token> Login(LoginAuthDto loginDto)
+        public async Task<IDataResult<Token>> LoginAsync(LoginAuthDto loginDto)
         {
-            var user = _userService.GetByEmail(loginDto.Email);
+            var user =await _userService.GetByEmailAsync(loginDto.Email);
             var isVerifyPassword = HashingHelper.VerifyPasswordHash(loginDto.Password, user.PasswordHash, user.PasswordSalt);
 
             //User Id kullanarak kullanıcıya ait operationClaim leri aldım
@@ -43,13 +43,13 @@ namespace Bussiness.Authentication
 
 
         [ValidationAspect(typeof(AuthValidator))]
-        public IResult Register(RegisterAuthDto authDto)
+        public async Task<IResult> RegisterAsync(RegisterAuthDto authDto)
         {
 
             //Bütün iş kurallarımı tek bir metot üzerinden yürüyorum
             IResult result = BusinessRules.Run
                    (
-                    CheckIfEmailExists(authDto.Email),
+                    await CheckIfEmailExistsAsync(authDto.Email),
                     CheckIfImageSizeOneMBAbove(authDto.Image.Length),
                     CheckIfImageExtensionsAllow(authDto.Image)
                    );
@@ -57,14 +57,14 @@ namespace Bussiness.Authentication
             if (result != null)
                 return result;
 
-            _userService.Add(authDto);
+            await _userService.AddAsync(authDto);
             return new SuccessResult("Kullanıcı başarıyla oluşturuldu");
         }
 
 
-        private IResult CheckIfEmailExists(string email)
+        private async Task<IResult> CheckIfEmailExistsAsync(string email)
         {
-            var list = _userService.GetByEmail(email);
+            var list =await _userService.GetByEmailAsync(email);
             return list == null ? new SuccessResult() : new ErrorResult("Bu mail adresi daha önce kullanılmış");
         }
 

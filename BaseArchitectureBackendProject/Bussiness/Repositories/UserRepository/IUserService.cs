@@ -11,13 +11,13 @@ namespace Bussiness.Repositories.UserRepository
 {
     public interface IUserService
     {
-        IDataResult<List<User>> GetList();
-        User GetByEmail(string email);
-        void Add(RegisterAuthDto register);
-        IDataResult<User> GetById(int id);
-        IResult Update(User user);
-        IResult ChangePassword(UserChangePasswordDto userChangePasswordDto);
-        IResult Delete(User user);
+        Task<IDataResult<List<User>>> GetListAsync();
+        Task<User> GetByEmailAsync(string email);
+        Task AddAsync(RegisterAuthDto register);
+        Task<IDataResult<User>> GetByIdAsync(int id);
+        Task<IResult> UpdateAsync(User user);
+        Task<IResult> ChangePasswordAsync(UserChangePasswordDto userChangePasswordDto);
+        Task<IResult> DeleteAsync(User user);
         List<OperationClaim> GetUserOperationClaims(int userId);
     }
 }
