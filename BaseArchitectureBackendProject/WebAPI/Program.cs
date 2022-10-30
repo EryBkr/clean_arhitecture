@@ -1,6 +1,7 @@
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Bussiness.DependencyResolvers.AutoFac;
+using Bussiness.Utilities.BackgroundServices;
 using Core.DependencyResolvers;
 using Core.Extensions;
 using Core.Utilities.IoC;
